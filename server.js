@@ -1,3 +1,15 @@
+process.on('uncaughtException', (err) => {
+  console.error('🔴 ERRORE CRITICO NON GESTITO:', err);
+  console.error('Stack trace:', err.stack); // Aggiungi la stack trace
+  // Non uscire subito in Render per permettere al log di essere catturato
+  // process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('🟡 PROMISE REJECTION NON GESTITA:', reason, promise);
+  // process.exit(1);
+});
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -36,6 +48,7 @@ app.get('/dati', async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log('✅ Server avviato su http://localhost:3000');
+const port = process.env.PORT || 3000; // Usa la porta fornita da Render o 3000 come fallback
+app.listen(port, () => {
+  console.log(`✅ Server avviato sulla porta ${port}`); // Modifica il messaggio per mostrare la porta corretta
 });
